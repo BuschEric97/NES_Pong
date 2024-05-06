@@ -2,6 +2,7 @@
     .incbin "rom.chr"
 
 .segment "ZEROPAGE"
+    GAMEFLAG: .res 1    ; #%00000WWG (WW == win flag (00 == no winner, 01 == P1 winner, 10 == P2 winner), G == game flag)
 
 .segment "VARS"
 
@@ -24,8 +25,8 @@ game_loop:
     lda nmi_ready
     bne game_loop
 
-    ; get gamepad input
-    jsr set_gamepad
+    ; get gamepad inputs
+    jsr set_gamepads
 
     ; return to start of game loop
     jmp game_loop
