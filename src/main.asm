@@ -28,5 +28,35 @@ game_loop:
     ; get gamepad inputs
     jsr set_gamepads
 
+    lda GAMEFLAG
+    and #%00000001
+    bne run_main_game
+        ;run_title_screen:
+        jsr title_screen_game
+        jmp game_loop
+    run_main_game:
+        jsr main_game
+
     ; return to start of game loop
     jmp game_loop
+
+; this subroutine is called when GAMEFLAG G bit is 0
+title_screen_game:
+    ; handle START button press on controller port 0
+    lda gamepad_new_press
+    and PRESS_START
+    cmp PRESS_START
+    bne start_not_pressed
+        lda #%00000001
+        sta GAMEFLAG    ; set GAMEFLAG to 1 to indicate a game is being played
+
+        jsr clear_background
+    start_not_pressed:
+
+    rts 
+
+; this subroutine is called when GAMEFLAG G bit is 1
+main_game:
+    ;
+
+    rts 
