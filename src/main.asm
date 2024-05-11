@@ -3,6 +3,8 @@
 
 .segment "ZEROPAGE"
     GAMEFLAG: .res 1    ; #%00000WWG (WW == win flag (00 == no winner, 01 == P1 winner, 10 == P2 winner), G == game flag)
+    PADDLE0YPOS: .res 1
+    PADDLE1YPOS: .res 1
 
 .segment "VARS"
 
@@ -51,12 +53,13 @@ title_screen_game:
         sta GAMEFLAG    ; set GAMEFLAG to 1 to indicate a game is being played
 
         jsr clear_background
+        jsr reset_paddles_pos
     start_not_pressed:
 
     rts 
 
 ; this subroutine is called when GAMEFLAG G bit is 1
 main_game:
-    ;
+    jsr draw_paddles
 
     rts 
