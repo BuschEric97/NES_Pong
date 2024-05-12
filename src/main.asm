@@ -48,18 +48,36 @@ title_screen_game:
     lda gamepad_new_press
     and PRESS_START
     cmp PRESS_START
-    bne start_not_pressed
+    bne title_start_not_pressed
         lda #%00000001
         sta GAMEFLAG    ; set GAMEFLAG to 1 to indicate a game is being played
 
         jsr clear_background
         jsr reset_paddles_pos
-    start_not_pressed:
+    title_start_not_pressed:
 
     rts 
 
 ; this subroutine is called when GAMEFLAG G bit is 1
 main_game:
+    ; get paddle movements from both gamepads
+    lda gamepad_press
+    and #%00110000      ; isolate gamepad up and gamepad down
+    lsr 
+    lsr 
+    lsr 
+    lsr                 ; shift isolated gamepad input to PADDLEMOVE AA
+    sta PADDLEMOVE
+    lda gamepad_press+1
+    and #%00110000      ; isolate gamepad up and gamepad down
+    lsr 
+    lsr                 ; shift isolated gamepad input to PADDLEMOVE BB
+    ora PADDLEMOVE
+    sta PADDLEMOVE
+    ; move the paddles according to paddle movements
+    jsr move_paddles
+
+    ; draw the paddles every frame
     jsr draw_paddles
 
     rts 
