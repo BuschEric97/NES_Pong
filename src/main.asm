@@ -5,6 +5,8 @@
     GAMEFLAG: .res 1    ; #%00000WWG (WW == win flag (00 == no winner, 01 == P1 winner, 10 == P2 winner), G == game flag)
     PADDLE0YPOS: .res 1
     PADDLE1YPOS: .res 1
+    BALLXPOS: .res 1
+    BALLYPOS: .res 1
 
 .segment "VARS"
 
@@ -54,6 +56,7 @@ title_screen_game:
 
         jsr clear_background
         jsr reset_paddles_pos
+        jsr reset_ball_pos
     title_start_not_pressed:
 
     rts 
@@ -77,7 +80,7 @@ main_game:
     ; move the paddles according to paddle movements
     jsr move_paddles
 
-    ; draw the paddles every frame
-    jsr draw_paddles
+    ; draw the paddles and ball every frame
+    jsr draw_game_pieces
 
     rts 

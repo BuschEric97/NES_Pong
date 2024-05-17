@@ -13,6 +13,13 @@ draw_sprites:
 
     rts 
 
+draw_game_pieces:
+    jsr draw_paddles
+    jsr draw_ball
+    jsr draw_sprites
+
+    rts 
+
 draw_paddles:
     lda PADDLE0YPOS
     sta $0204           ; paddle 0 sprite 0 - y pos
@@ -69,7 +76,20 @@ draw_paddles:
     sta $021F
     sta $0223
 
-    jsr draw_sprites
+    rts 
+
+draw_ball:
+    lda BALLYPOS
+    sta $0200
+
+    lda #$00
+    sta $0201
+
+    lda #%00000000
+    sta $0202
+
+    lda BALLXPOS
+    sta $0203
 
     rts 
 

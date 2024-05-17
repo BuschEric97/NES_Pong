@@ -1,13 +1,26 @@
-.define PADDLEMOVEFACTOR      #$02
+.define PADDLEMOVEFACTOR        #$02
+.define BALLMOVEFACTOR          #$02
+
+.define PADDLEDEFAULTYPOS       #$64
+.define BALLDEFAULTXPOS         #$7C
+.define BALLDEFAULTYPOS         #$64
 
 .segment "ZEROPAGE"
     PADDLEMOVE: .res 1      ; #%0000BBAA (AA == paddle 0, BB == paddle 1 (for each: 00 == not move, 01 == move up, 10 == move down))
 
 .segment "CODE"
 reset_paddles_pos:
-    lda #$64
+    lda PADDLEDEFAULTYPOS
     sta PADDLE0YPOS
     sta PADDLE1YPOS
+
+    rts 
+
+reset_ball_pos:
+    lda BALLDEFAULTXPOS
+    sta BALLXPOS
+    lda BALLDEFAULTYPOS
+    sta BALLYPOS
 
     rts 
 
