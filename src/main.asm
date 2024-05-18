@@ -2,11 +2,13 @@
     .incbin "rom.chr"
 
 .segment "ZEROPAGE"
-    GAMEFLAG: .res 1    ; #%00000WWG (WW == win flag (00 == no winner, 01 == P1 winner, 10 == P2 winner), G == game flag)
+    GAMEFLAG: .res 1        ; #%00000WWG (WW == win flag (00 == no winner, 01 == P1 winner, 10 == P2 winner), G == game flag)
     PADDLE0YPOS: .res 1
     PADDLE1YPOS: .res 1
     BALLXPOS: .res 1
     BALLYPOS: .res 1
+    BALLXVEL: .res 1        ; stored as 2's complement signed integer
+    BALLYVEL: .res 1        ; stored as 2's complement signed integer
 
 .segment "VARS"
 
@@ -79,6 +81,8 @@ main_game:
     sta PADDLEMOVE
     ; move the paddles according to paddle movements
     jsr move_paddles
+
+    jsr move_ball
 
     ; draw the paddles and ball every frame
     jsr draw_game_pieces

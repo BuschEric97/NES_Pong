@@ -1,5 +1,4 @@
 .define PADDLEMOVEFACTOR        #$02
-.define BALLMOVEFACTOR          #$02
 
 .define PADDLEDEFAULTYPOS       #$64
 .define BALLDEFAULTXPOS         #$7C
@@ -7,6 +6,7 @@
 
 .segment "ZEROPAGE"
     PADDLEMOVE: .res 1      ; #%0000BBAA (AA == paddle 0, BB == paddle 1 (for each: 00 == not move, 01 == move up, 10 == move down))
+    TEMPVEL: .res 1
 
 .segment "CODE"
 reset_paddles_pos:
@@ -62,4 +62,54 @@ move_paddles:
                 sta PADDLE1YPOS
 
     done_move_paddles:
+    rts 
+
+move_ball:
+    ;move_ball_x_pos:
+
+    lda BALLXVEL
+    bmi ball_x_dir_minus
+        ;ball_x_dir_plus:
+        lda BALLXPOS
+        clc 
+        adc BALLXVEL
+        sta BALLXPOS
+        jmp move_ball_y_pos
+    ball_x_dir_minus:
+        ; calculate and store absolute value of BALLXVEL
+        lda BALLXVEL
+        eor #%11111111
+        clc 
+        adc #1
+        sta TEMPVEL
+
+        lda BALLXPOS
+        sec 
+        sbc TEMPVEL
+        sta BALLXPOS
+
+    move_ball_y_pos:
+
+    lda BALLYVEL
+    bmi ball_y_dir_minus
+        ;ball_y_dir_plus:
+        lda BALLYPOS
+        clc 
+        adc BALLYVEL
+        sta BALLYPOS
+        jmp done_move_ball
+    ball_y_dir_minus:
+        ; calculate and store absolute value of BALLYVEL
+        lda BALLYVEL
+        eor #%11111111
+        clc 
+        adc #1
+        sta TEMPVEL
+
+        lda BALLYPOS
+        sec 
+        sbc TEMPVEL
+        sta BALLYPOS
+
+    done_move_ball:
     rts 
